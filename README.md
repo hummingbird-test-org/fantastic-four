@@ -16,8 +16,7 @@
     - `released`
     - `published`
 2. Repository must have "Dependency Graph" enabled, else it won't let SBOM be generated <https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/configuring-the-dependency-graph#enabling-and-disabling-the-dependency-graph>
-
-
+3. SBOM files will be generated on which branch ?
 
 #### Reference
 
@@ -25,3 +24,4 @@
 - <https://docs.github.com/en/webhooks/webhook-events-and-payloads#release>
 - <https://docs.github.com/en/rest/dependency-graph/sboms?apiVersion=2022-11-28&search-overlay-input=release>
 -<https://octokit.github.io/rest.js/v22/#dependency-graph-export-sbom>
+- <https://docs.github.com/en/code-security/trialing-github-advanced-security/planning-a-trial-of-ghas>
