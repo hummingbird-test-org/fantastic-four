@@ -11,13 +11,15 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.9.0",
     "@rsbuild/plugin-node-polyfill": "^1.4.2",
     "axios": "^1.7.1",
     "node-fetch": "^1.7.3",
     "prismjs": "^1.27.0",
     "randomstring": "^1.3.1",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.3",
