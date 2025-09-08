@@ -19,12 +19,14 @@ jobs:
         uses: anchore/sbom-action@v0
         with:
           output-file: sbom-anchore.spdx.json
+          upload-release-assets: false
+          upload-artifact: true
 
       - name: Generate SBOM with Microsoft SBOM Tool
         run: | 
           curl -Lo $RUNNER_TEMP/sbom-tool https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-linux-x64
           chmod +x $RUNNER_TEMP/sbom-tool
-          $RUNNER_TEMP/sbom-tool generate -b . -bc . -pn ${{ github.repository }} -pv 1.0.0 -ps OwnerName -nsb https://sbom.mycompany.com -V Verbose
+          $RUNNER_TEMP/sbom-tool generate -b . -bc . -pn ${{ github.repository }} -pv 1.0.0 -ps OwnerName -nsb https://sbom.mycompany.com -V Verbose -op sbom-microsoft.spdx.json
       - name: Upload SBOM Artifact
         uses: actions/upload-artifact@v4
         with:
