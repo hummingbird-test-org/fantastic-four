@@ -19,9 +19,6 @@ jobs:
         uses: anchore/sbom-action@v0
         with:
           output-file: sbom-anchore.spdx.json
-          upload-artifact-retention: 30
-          upload-artifact: true
-          upload-release-assets: true
 
       - name: Generate SBOM with Microsoft SBOM Tool
         run: | 
@@ -31,5 +28,6 @@ jobs:
       - name: Upload SBOM Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sbom
-          path: sbom-microsoft.spdx.json
+          path: |
+            sbom-anchore.spdx.json
+            sbom-microsoft.spdx.json
