@@ -32,5 +32,12 @@ jobs:
         with:
           name: sbom
           path: _manifest/spdx_2.2
-      - name: List files
+      - name: List files - Root
         run: ls -l
+      - name: List files - sboms
+        run: ls -l sboms
+      - name: List files - _manifest
+        run: ls -l _manifest
+      - name: List files - _manifest/spdx_2.2
+        run: ls -l _manifest/spdx_2.2
+
