@@ -13,7 +13,11 @@ jobs:
       actions: read
     steps:
       - uses: actions/checkout@v4
-
+      - name: Show Branch Information
+        run: |
+          echo "Branch Name: ${{ github.ref_name }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "SHA: ${{ github.sha }}"
       - name: Generate SBOM with Anchore
         id: sbom
         uses: anchore/sbom-action@v0
@@ -32,6 +36,7 @@ jobs:
         with:
           name: sbom
           path: _manifest/spdx_2.2
+
       - name: List files - Root
         run: ls -l
       - name: List files - sboms
