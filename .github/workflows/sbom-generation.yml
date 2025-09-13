@@ -82,6 +82,17 @@ jobs:
             sbom-cdxgen.cyclonedx.json
             sbom-cdxgen.spdx.json
 
+      - name: Generate SBOM with Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+          trivy sbom --format spdx-json --output sbom-trivy.spdx.json .
+
+      - name: Upload SBOM by Trivy as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-trivy
+          path: sbom-trivy.spdx.json
+
       - name: List files - Root
         run: |
           sudo apt-get update && sudo apt-get install -y tree
