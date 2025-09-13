@@ -54,6 +54,7 @@ jobs:
 
       - name: Generate SBOM with cdxgen
         run: |
+          mkdir -p ${{ github.workspace }}/cdxgen-tmp
           docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd)":/app -t ghcr.io/cyclonedx/cdxgen:latest -r . -o ./sbom-cdxgen.cyclonedx.json
 
       - name: Install CycloneDX CLI for conversion
