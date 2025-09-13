@@ -3,7 +3,7 @@ name: sbom-generation-v2
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   generate-sbom:
