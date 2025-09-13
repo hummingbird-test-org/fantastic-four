@@ -82,10 +82,13 @@ jobs:
             sbom-cdxgen.cyclonedx.json
             sbom-cdxgen.spdx.json
 
-      - name: Generate SBOM with Trivy
-        run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          trivy sbom --format spdx-json --output sbom-trivy.spdx.json .
+      - name: Run Trivy in GitHub SBOM mode and submit results to Dependency Graph
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          format: 'spdx-json'
+          output: 'sbom-trivy.spdx.json'
+          scan-ref: '.'
 
       - name: Upload SBOM by Trivy as Artifact
         uses: actions/upload-artifact@v4
