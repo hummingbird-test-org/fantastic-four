@@ -1,0 +1,82 @@
+name: sbom-generation-v2
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  generate-sbom:
+    name: Generate SBOM V2 with Multiple Tools
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate SBOM with Anchore
+        id: sbom
+        uses: anchore/sbom-action@v0
+        with:
+          output-file: sbom-anchore
+          upload-release-assets: false
+          upload-artifact: false
+      - name: Upload SBOM by Anchore as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-anchore
+          path: sbom-anchore
+      - name: Generate SBOM with Microsoft SBOM Tool
+        run: | 
+          curl -Lo $RUNNER_TEMP/sbom-tool https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-linux-x64
+          chmod +x $RUNNER_TEMP/sbom-tool
+          $RUNNER_TEMP/sbom-tool generate -b . -bc . -pn ${{ github.repository }} -pv 1.0.0 -ps SRM_test
+      - name: Upload SBOM by Microsoft as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-microsoft
+          path: _manifest/spdx_2.2
+
+      - name: Install syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Generate SBOM with Syft
+        run: |
+          syft . -o spdx-json > sbom-syft.spdx.json
+
+      - name: Upload SBOM by Syft as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-syft
+          path: sbom-syft.spdx.json
+
+      - name: Generate SBOM with cdxgen
+        run: |
+          docker run --rm -v "$(pwd)":/app -t ghcr.io/cyclonedx/cdxgen:latest -r . -o ./sbom-cdxgen.cyclonedx.json
+
+      - name: Install CycloneDX CLI for conversion
+        run: |
+          wget https://github.com/CycloneDX/cyclonedx-cli/releases/latest/download/cyclonedx-linux-x64 -O cyclonedx
+          chmod +x cyclonedx
+          sudo mv cyclonedx /usr/local/bin/cyclonedx
+
+      - name: Convert cyclonedx bom to to SPDX spec
+        run: |
+          if [ -f sbom-cdxgen.cyclonedx.json ]; then
+            cyclonedx convert --input-file sbom-cdxgen.cyclonedx.json --output-file sbom-cdxgen.spdx.json --output-format spdxjson
+          fi
+
+      - name: Upload SBOM by cdxgen as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cdxgen
+          path: |
+            sbom-cdxgen.cyclonedx.json
+            sbom-cdxgen.spdx.json
+
+      - name: List files - Root
+        run: |
+          sudo apt-get update && sudo apt-get install -y tree
+          tree -L 4 -a
