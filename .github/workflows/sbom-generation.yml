@@ -3,11 +3,11 @@ name: sbom-generation-v2
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   generate-sbom:
-    name: Generate SBOM V2 with Multiple Tools
+    name: Generate SBOM
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -54,7 +54,7 @@ jobs:
 
       - name: Generate SBOM with cdxgen
         run: |
-          sudo docker run --rm -v "$(pwd)":/app -t ghcr.io/cyclonedx/cdxgen:latest -r . -o sbom-cdxgen.cyclonedx.json
+          docker run --rm -v "$(pwd)":/app -t ghcr.io/cyclonedx/cdxgen:latest -r . -o ./sbom-cdxgen.cyclonedx.json
 
       - name: Install CycloneDX CLI for conversion
         run: |
