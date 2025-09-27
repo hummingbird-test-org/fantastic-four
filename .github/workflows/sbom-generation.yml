@@ -1,9 +1,8 @@
 name: sbom-generation-v2
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 
 jobs:
   generate-sbom:
