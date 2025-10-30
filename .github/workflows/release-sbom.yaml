@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-            - name: Generate SBOM with cdxgen
+      - name: Generate SBOM with cdxgen
         run: |
               mkdir -p ${{ github.workspace }}/cdxgen-tmp
               docker run --rm \
