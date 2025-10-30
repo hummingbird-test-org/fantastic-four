@@ -1,8 +1,8 @@
 name: sbom-generation-v1
 
-on:
-  release:
-    types: [published]
+on: issue_comment
+  # release:
+  #   types: [published]
 
 jobs:
   generate-sbom:
