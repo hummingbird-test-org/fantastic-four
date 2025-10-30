@@ -1,0 +1,32 @@
+name: sbom-generation-for-release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  generate-sbom:
+    name: Generate SBOM For Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate SBOM with cdxgen
+        run: |
+              mkdir -p ${{ github.workspace }}/cdxgen-tmp
+              docker run --rm \
+              -u "$(id -u):$(id -g)" \
+              -v "$(pwd)":/app \
+              -v "${{ github.workspace }}/cdxgen-tmp":/tmp/cdxgen-temp \
+              -e TMPDIR=/tmp/cdxgen-temp \
+              -t ghcr.io/cyclonedx/cdxgen:latest \
+              -r . -o ./sbom-cdxgen.cyclonedx.json
+
+      - name: Upload SBOM by cdxgen as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cdxgen
+          path: sbom-cdxgen.cyclonedx.json

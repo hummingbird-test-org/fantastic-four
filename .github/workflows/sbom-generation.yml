@@ -1,9 +1,6 @@
 name: sbom-generation-v2
 
-on:
-  push:
-    branches:
-      - main
+on: issue_comment
 
 jobs:
   generate-sbom:
