@@ -1,0 +1,23 @@
+name: sbom-generation-for-release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release-bundle:
+    name: Release Bundle with code
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Digicert Release Security Monitor Action
+        id: digicert-release-security-monitor
+        uses: partharoy-digicert/hummingbird-github-action@main  # or @v1
+        with:
+          srm-token: ${{ secrets.SRM_TOKEN }}
+          sbom-artifact: true
+          track-release: true
