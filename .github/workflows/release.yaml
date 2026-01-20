@@ -1,4 +1,4 @@
-name: sbom-generation-for-release
+name: release-app
 
 on:
   release:
